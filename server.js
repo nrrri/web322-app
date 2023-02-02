@@ -1,6 +1,6 @@
 var express = require("express");
 var app = express();
-//var path = require("path");
+var path = require("path");
 
 var HTTP_PORT = process.env.PORT || 8080;
 
@@ -16,13 +16,12 @@ app.use(express.static("public"));
 // setup a 'route' to listen on the default url path (http://localhost)
 app.get("/", function(req,res){
     res.redirect("/about");
-   // res.send("Hello World<br /><a href='/about'>Go to the about page</a>");
 });
 
 // setup another route to listen on /about
 app.get("/about", function(req,res){
-    //res.sendFile(path.join(__dirname,"/views/about.html"));
-    res.send("About me");
+    res.sendFile(path.join(__dirname,"/views/about.html"));
+    //res.send("About me");
     
 });
 
