@@ -52,8 +52,8 @@ module.exports.getAllPosts = () => {
 // export Blog pub;ish == true
 module.exports.getPublishedPosts = () => {
     return new Promise((resolve, reject) => {
-        if (posts.length > 0 && posts.indexOf("published") == true) {
-            resolve(posts)
+        if (posts.length > 0 ) {
+            resolve(posts.filter(({ published }) => published === true ))
         } else {
             reject("No results returned")
         }
