@@ -52,10 +52,61 @@ module.exports.getAllPosts = () => {
 // export Blog pub;ish == true
 module.exports.getPublishedPosts = () => {
     return new Promise((resolve, reject) => {
-        if (posts.length > 0 ) {
-            resolve(posts.filter(({ published }) => published === true ))
+        if (posts.length > 0) {
+            resolve(posts.filter(({ published }) => published === true))
         } else {
             reject("No results returned")
         }
     })
 }
+
+module.exports.getPostByCategory = (num) => {
+    return new Promise((resolve, reject) => {
+        if (posts.length > 0) {
+            resolve(posts.filter(({ category }) => category == num))
+        } else {
+            reject("no results returned")
+        }
+    })
+}
+
+module.exports.getPostByMinDate = (minDateStr) => {
+    return new Promise((resolve, reject) => {
+        if (posts.length > 0) {
+            resolve(posts.filter(({ postDate }) => new Date(postDate) >=  new Date(minDateStr)))
+            // recheck
+            // if(new Date(somePostObj.postDate) >= new Date(minDateStr)){
+            //     console.log("The postDate value is greater than minDateStr")
+            // }
+            
+        } else {
+            reject("no results returned")
+        }
+    })
+}
+
+module.exports.getPostById = (id) => {
+    return new Promise((resolve, reject) => {
+        if (posts.length > 0) {
+            resolve(posts.filter(({ id }) => this.id == id))
+        } else {
+            reject("no result returned")
+        }
+    })
+}
+
+
+module.exports.addPost = (postData) => {
+    return new Promise((resolve, reject) => {
+        if (postData) {
+
+            postData.id = posts.length + 1
+            posts.push(postData)
+            console.log(postData)
+            resolve(postData)
+        } else {
+            reject("failed")
+        }
+    })
+}
+
