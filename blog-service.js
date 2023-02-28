@@ -60,10 +60,11 @@ module.exports.getPublishedPosts = () => {
     })
 }
 
-module.exports.getPostByCategory = (num) => {
+// filter category
+module.exports.getPostByCategory = (category) => {
     return new Promise((resolve, reject) => {
         if (posts.length > 0) {
-            resolve(posts.filter(({ category }) => category == num))
+            resolve(posts.filter(posts => posts.category == category))
         } else {
             reject("no results returned")
         }
@@ -72,12 +73,9 @@ module.exports.getPostByCategory = (num) => {
 
 module.exports.getPostByMinDate = (minDateStr) => {
     return new Promise((resolve, reject) => {
-        if (posts.length > 0) {
-            resolve(posts.filter(({ postDate }) => new Date(postDate) >=  new Date(minDateStr)))
-            // recheck
-            // if(new Date(somePostObj.postDate) >= new Date(minDateStr)){
-            //     console.log("The postDate value is greater than minDateStr")
-            // }
+        let postByDate = posts.filter(posts => new Date(posts.postDate) >= new Date(minDateStr))
+        if(postByDate.length > 0) {
+            resolve(postByDate)
             
         } else {
             reject("no results returned")
@@ -88,7 +86,8 @@ module.exports.getPostByMinDate = (minDateStr) => {
 module.exports.getPostById = (id) => {
     return new Promise((resolve, reject) => {
         if (posts.length > 0) {
-            resolve(posts.filter(({ id }) => this.id == id))
+            console.log(id)
+            resolve(posts.filter( (posts)  => posts.id == id))
         } else {
             reject("no result returned")
         }
@@ -99,7 +98,6 @@ module.exports.getPostById = (id) => {
 module.exports.addPost = (postData) => {
     return new Promise((resolve, reject) => {
         if (postData) {
-
             postData.id = posts.length + 1
             posts.push(postData)
             console.log(postData)

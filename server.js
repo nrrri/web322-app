@@ -5,7 +5,7 @@
 * 
 *  Name: __Narisorn Chowarun__ Student ID: __169007218__ Date: __Fubruary 4, 2023_
 *
-*  Cyclic Web App URL: ___https://app.cyclic.sh/#/deploy/nrrri/web322-app__
+*  Cyclic Web App URL: ___https://viridian-armadillo-garb.cyclic.app/__
 *
 *  GitHub Repository URL: ___https://github.com/nrrri/web322-app.git__
 *
@@ -52,9 +52,12 @@ app.get("/", function (req, res) {
 // setup another route to listen on /about
 app.get("/about", function (req, res) {
     res.sendFile(path.join(__dirname, "/views/about.html"));
-    //res.send("About me");
-
 });
+
+// app get for new route
+//////////////////////////
+//
+
 
 // setup another route to listen on /blog
 app.get("/blog", (req, res) => {
@@ -70,20 +73,25 @@ app.get("/blog", (req, res) => {
 // setup another route to listen on /posts
 app.get("/posts", (req, res) => {
     if (req.query.category) {
-        blog.getAllPostsByCategory(req.query.category)
-            .then((posts) => { res.json(posts) })
+        blog.getPostByCategory(req.query.category)
+            .then((posts) => { 
+                res.json(posts) })
             .catch((err) => {
                 console.log(err)
                 res.send(err)
             })
-    } else if (req.query.postDate) {
-        blog.getAllPostsByMinDate(req.query.postDate)
-            .then((posts) => { res.json(posts) })
+    } else if (req.query.minDate) {
+        // 
+        blog.getPostByMinDate(req.query.minDate)
+            .then((posts) => { 
+                res.json(posts) 
+            })
             .catch((err) => {
                 console.log(err)
                 res.send(err)
             })
     } else {
+        // get all posts without filter
         blog.getAllPosts()
             .then((posts) => { res.json(posts) })
             .catch((err) => {
@@ -94,9 +102,10 @@ app.get("/posts", (req, res) => {
     //res.send("this is in posts new");
 })
 
-app.get("/post/value",(req,res) => {
-    blog.getPostById(req.query.id)
-    .then((posts) => { res.json(req.query.id) })
+// get post by id -> add route (param :id)
+app.get("/post/:id",(req,res) => {
+    blog.getPostById(req.params.id)
+    .then((posts) => { res.json(posts) })
     .catch((err) => {
         console.log(err)
         res.send(err)
