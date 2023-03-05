@@ -1,5 +1,5 @@
 /*********************************************************************************
-*  WEB322 – Assignment 03
+*  WEB322 – Assignment 04
 *  I declare that this assignment is my own work in accordance with Seneca  Academic Policy.  No part *  of this assignment has been copied manually or electronically from any other source 
 *  (including 3rd party web sites) or distributed to other students.
 * 
@@ -24,6 +24,12 @@ const upload = multer();
 const cloudinary = require('cloudinary').v2;
 const streamifier = require('streamifier');
 
+// week 4 adding .hbs
+const exphbs = require('express-handlebars');
+app.engine('.hbs', exphbs.engine({ extname: '.hbs' }));
+app.set('view engine', '.hbs');
+
+
 cloudinary.config({
     cloud_name: "dloc6ybj4",
     api_key: "457235514631484",
@@ -41,7 +47,7 @@ function onHttpStart() {
 
 // put this before routes
 app.use(express.static("public"));
-app.use(express.urlencoded({ extended: true }));
+//app.use(express.urlencoded({ extended: true }));
 
 
 // setup a 'route' to listen on the default url path (http://localhost)
@@ -51,7 +57,8 @@ app.get("/", function (req, res) {
 
 // setup another route to listen on /about
 app.get("/about", function (req, res) {
-    res.sendFile(path.join(__dirname, "/views/about.html"));
+    res.render('about')
+    // res.sendFile(path.join(__dirname, "/views/about.html"));
 });
 
 // app get for new route
@@ -125,7 +132,8 @@ app.get("/categories", (req, res) => {
 
 // setup another route to listen on /posts/add
 app.get("/posts/add", (req, res) => {
-    res.sendFile(path.join(__dirname, "/views/addPost.html"));
+    res.render('addPost')
+    // res.sendFile(path.join(__dirname, "/views/addPost.html"));
 })
 
 // for uploading file to posts/add (picture)
