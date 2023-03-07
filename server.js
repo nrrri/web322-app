@@ -288,7 +288,6 @@ app.post("/posts/add", upload.single("featureImage"), (req, res) => {
         });
     } else {
         processPost("");
-
     }
 
     function processPost(imageUrl) {
