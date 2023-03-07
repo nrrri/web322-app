@@ -53,7 +53,7 @@ module.exports.getAllPosts = () => {
 module.exports.getPublishedPosts = () => {
     return new Promise((resolve, reject) => {
         if (posts.length > 0) {
-            resolve(posts.filter(({ published }) => published === true))
+            resolve(posts.filter(({ published }) => published == true))
         } else {
             reject("No results returned")
         }
@@ -87,7 +87,7 @@ module.exports.getPostById = (id) => {
     return new Promise((resolve, reject) => {
         if (posts.length > 0) {
             console.log(id)
-            resolve(posts.filter( (posts)  => posts.id == id))
+            resolve(posts.filter(posts => posts.id == id))
         } else {
             reject("no result returned")
         }
@@ -99,6 +99,8 @@ module.exports.addPost = (postData) => {
     return new Promise((resolve, reject) => {
         if (postData) {
             postData.id = posts.length + 1
+            // add postDate
+            postData.postDate = postDate
             posts.push(postData)
             console.log(postData)
             resolve(postData)
@@ -108,3 +110,16 @@ module.exports.addPost = (postData) => {
     })
 }
 
+// check posts is published and filtered by category
+module.exports.getPublishedPostsByCategory = (category) => {
+    return new Promise((resolve, reject) => {
+        if (posts.length > 0) {
+            let checkPublished = posts.filter(({ published }) => published == true)
+            let checkCategory = posts.filter ((posts) => posts.category == category)
+
+            resolve(checkPublished && checkCategory)
+        } else {
+            reject("No results returned")
+        }
+    })
+}
