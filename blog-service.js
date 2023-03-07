@@ -114,10 +114,8 @@ module.exports.addPost = (postData) => {
 module.exports.getPublishedPostsByCategory = (category) => {
     return new Promise((resolve, reject) => {
         if (posts.length > 0) {
-            let checkPublished = posts.filter(({ published }) => published == true)
-            let checkCategory = posts.filter ((posts) => posts.category == category)
-
-            resolve(checkPublished && checkCategory)
+            let checkPublished = posts.filter(posts => posts.published == true && posts.category == category)
+            resolve(checkPublished)
         } else {
             reject("No results returned")
         }
