@@ -1,0 +1,37 @@
+<div class="row">
+    <div class="col-md-12">
+        <h2>Posts</h2>
+        <hr />
+
+        <div class="table-responsive">
+            <table class="table table-dark">
+                <thead>
+                    <th scope="col">Post ID</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Post Date</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Published</th>
+                </thead>
+                <tbody>
+                    {{#each posts}}
+                    <tr>
+                        <td scope="row">{{this.id}}</td>
+                        <td scope="row">{{this.title}}</td>
+                        <td scope="row">{{this.postDate}}</td>
+                        <td scope="row"><a href="/posts?category={{this.category}}">{{this.category}}</a></td> {{! filtered}}
+                        <td scope="row">{{this.published}}</td>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+        {{#unless posts}}
+        <tr>
+            <div class="col-md-12 text-center">
+                <strong>{{message}}</strong>
+            </div>
+        </tr>
+        {{/unless}}
+
+    </div>
+</div>
+</div>
