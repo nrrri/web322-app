@@ -187,7 +187,7 @@ app.get('/blog/:id', async (req, res) => {
     }catch(err){
         viewData.categoriesMessage = "no results"
     }
-
+console.log(viewData)
     // render the "blog" view with all of the data (viewData)
     res.render("blog", {data: viewData})
 });
@@ -259,6 +259,7 @@ app.get("/posts/add", (req, res) => {
 // for uploading file to posts/add (picture)
 app.post("/posts/add", upload.single("featureImage"), (req, res) => {
     //console.log(req.body)
+    console.log(req)
     if (req.file) {
         let streamUpload = (req) => {
             return new Promise((resolve, reject) => {

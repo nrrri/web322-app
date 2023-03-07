@@ -3,13 +3,13 @@
         {{#if data.post}}
         <article>
             
-            <h2>{{data.post.title}}</h2>
+            <h2>test{{data.post.title}}</h2>
             <img src="{{data.post.featureImage}} "alt="feature Image" style="width:100%" />
             <br /><br />
             {{#safeHTML data.post.body}}{{/safeHTML}}
             <br /><br />
-            <strong>Category:</strong> {{data.post.category}}<br />
-            <strong>Last Updated:</strong> {{data.post.postDate}}
+            <strong>Category:</strong>test {{data.post.category}}<br />
+            <strong>Last Updated:</strong>test {{data.post.postDate}}
             
         </article>
         {{else}}

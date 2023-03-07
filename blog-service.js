@@ -87,7 +87,7 @@ module.exports.getPostById = (id) => {
     return new Promise((resolve, reject) => {
         if (posts.length > 0) {
             console.log(id)
-            resolve(posts.filter(posts => posts.id == id))
+            resolve(posts.find(posts => posts.id == id))
         } else {
             reject("no result returned")
         }
@@ -104,14 +104,18 @@ module.exports.addPost = (postData) => {
 
     return new Promise((resolve, reject) => {
         if (postData) {
+
+            if(postData.published) {
+                postData.published = true;
+            } else {
+                postData.published = false;
+            }
             postData.id = posts.length + 1
             // add postDate
             postData.postDate = formatDate
             posts.push(postData)
-            // check data
-            console.log(postData)
-            console.log("-------------------")
-            console.log(posts)
+            
+            // recheck ------
             resolve(posts)
         } else {
             reject("failed")
@@ -123,7 +127,7 @@ module.exports.addPost = (postData) => {
 module.exports.getPublishedPostsByCategory = (category) => {
     return new Promise((resolve, reject) => {
         if (posts.length > 0) {
-            let checkPublished = posts.filter(posts => posts.published == true && posts.category == category)
+            let checkPublished = posts.filter(posts => posts.published == true && (posts.category == category || category == ''))
             resolve(checkPublished)
         } else {
             reject("No results returned")
