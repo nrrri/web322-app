@@ -96,14 +96,23 @@ module.exports.getPostById = (id) => {
 
 
 module.exports.addPost = (postData) => {
+    let date = new Date()
+    let year = date.toLocaleString("default", { year: "numeric" });
+    let month = date.toLocaleString("default", { month: "2-digit" });
+    let day = date.toLocaleString("default", { day: "2-digit" });
+    let formatDate = year+'-'+month+'-'+day
+
     return new Promise((resolve, reject) => {
         if (postData) {
             postData.id = posts.length + 1
             // add postDate
-            postData.postDate = postDate
+            postData.postDate = formatDate
             posts.push(postData)
+            // check data
             console.log(postData)
-            resolve(postData)
+            console.log("-------------------")
+            console.log(posts)
+            resolve(posts)
         } else {
             reject("failed")
         }
