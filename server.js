@@ -1,9 +1,9 @@
 /*********************************************************************************
-*  WEB322 – Assignment 04
+*  WEB322 – Assignment 05
 *  I declare that this assignment is my own work in accordance with Seneca  Academic Policy.  No part *  of this assignment has been copied manually or electronically from any other source 
 *  (including 3rd party web sites) or distributed to other students.
 * 
-*  Name: __Narisorn Chowarun__ Student ID: __169007218__ Date: __March 7, 2023_
+*  Name: __Narisorn Chowarun__ Student ID: __169007218__ Date: __March 24, 2023_
 *
 *  Cyclic Web App URL: ___https://plain-ruby-rabbit.cyclic.app__
 *
@@ -77,7 +77,15 @@ app.engine('.hbs', exphbs.engine({
         },
         safeHTML: function(context){
             return stripJs(context);
-        }        
+        },
+        formatDate: function(dateObj){
+            let year = dateObj.getFullYear();
+            let month = (dateObj.getMonth() + 1).toString();
+            let day = dateObj.getDate().toString();
+            return `${year}-${month.padStart(2, '0')}-${day.padStart(2,'0')}`;
+        }
+        // Instead of writing something like {{postDate}}, you can instead write {{#formatDate postDate}}{{/formatDate}}
+        
     }
 }));
 
