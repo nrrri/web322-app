@@ -26,7 +26,7 @@ Post.belongsTo(Category, { foreignKey: 'category' });
 const { gte } = Sequelize.Op;
 
 
-// note: rechecked
+
 module.exports.initialize = () => {
     return new Promise((resolve, reject) => {
         sequelize.sync().then(() => {
@@ -39,23 +39,18 @@ module.exports.initialize = () => {
     })
 }
 
-// note: rechecked
+
 // export Categories array
 module.exports.getCategories = () => {
     return new Promise((resolve, reject) => {
-        Category.findAll().then(() => {
-            // // recheck
-            // console.log("Recheck getCategory")
-            // console.log([Category])
-            // // end
-            resolve()
+        Category.findAll().then((Categories) => {
+            resolve(Categories)
         }).catch((err) => {
             reject(err);
         })
     })
 }
 
-// note: rechecked
 // export Posts array
 module.exports.getAllPosts = () => {
     return new Promise((resolve, reject) => {
@@ -69,7 +64,6 @@ module.exports.getAllPosts = () => {
 }
 
 // export Blog publish == true
-// note: rechecked
 module.exports.getPublishedPosts = () => {
     return new Promise((resolve, reject) => {
         Post.findAll({
@@ -77,10 +71,7 @@ module.exports.getPublishedPosts = () => {
                 published: true
             }
         }).then((Posts) => {
-            // // check
-            // console.log([Posts])
-            // console.log("Check from getPublishedPosts")
-            // // end
+           
             resolve(Posts)
         }).catch((err) => {
             console.log("no results returned")
@@ -89,7 +80,6 @@ module.exports.getPublishedPosts = () => {
     })
 }
 
-// note: rechecked
 // filter category
 module.exports.getPostByCategory = (id) => {
     // use a value pass to function
@@ -99,10 +89,6 @@ module.exports.getPostByCategory = (id) => {
                 id: id
             }
         }).then((posts) => {
-            // // check 
-            // console.log("This is from getPostByCategory receiving id = number but (type = String)")
-            // console.log([posts])
-            // // dont forget to delete later
             resolve(posts)
         }).catch((err) => {
             console.log("no results returned")
@@ -111,7 +97,6 @@ module.exports.getPostByCategory = (id) => {
     })
 }
 
-// note: rechecked
 module.exports.getPostByMinDate = (minDateStr) => {
     return new Promise((resolve, reject) => {
         Post.findAll({
@@ -129,7 +114,7 @@ module.exports.getPostByMinDate = (minDateStr) => {
     })
 }
 
-// note: rechecked
+
 module.exports.getPostById = (id) => {
     return new Promise((resolve, reject) => {
         Post.findAll({
@@ -137,11 +122,6 @@ module.exports.getPostById = (id) => {
                 id: id
             }
         }).then((data) => {
-            // // recheck
-            // console.log("from getPostById")
-            // console.log([data])
-            // // end of recheck
-
             resolve(data)
         }).catch((err) => {
             console.log("no results returned")
@@ -150,7 +130,7 @@ module.exports.getPostById = (id) => {
     })
 }
 
-// note: rechecked
+
 module.exports.addPost = (postData) => {
     return new Promise((resolve, reject) => {
         // check 1 : published set to true or false
@@ -227,8 +207,6 @@ module.exports.deletePostById = (id) => {
     })
 }
 
-
-// note: rechecked
 // check posts is published and filtered by category
 module.exports.getPublishedPostsByCategory = (category) => {
     return new Promise((resolve, reject) => {
@@ -239,10 +217,6 @@ module.exports.getPublishedPostsByCategory = (category) => {
                 category: category // integer value
             }
         }).then((data) => {
-            // // recheck
-            // console.log([data])
-            // console.log("from getPublishedPostsByCategory")
-            // // end
             console.log("GET POSTS SUCCESSFULLY")
             resolve(data)
         }).catch((err) => {

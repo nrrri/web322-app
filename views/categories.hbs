@@ -19,7 +19,8 @@
               <td scope="row"><a
                   href="/posts?category={{this.id}}"
                 >{{this.category}}</a></td>
-                <a href="/categories/delete/{{this.category}}" class="btn btn-danger pull-right">Remove</a>
+                <td scope="row"><a href="/categories/delete/{{this.id}}" class="btn btn-danger pull-right">Remove</a></td>
+                
             </tr>
           {{/each}}
         </tbody>
