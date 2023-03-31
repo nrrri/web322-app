@@ -3,7 +3,7 @@
 *  I declare that this assignment is my own work in accordance with Seneca  Academic Policy.  No part *  of this assignment has been copied manually or electronically from any other source 
 *  (including 3rd party web sites) or distributed to other students.
 * 
-*  Name: __Narisorn Chowarun__ Student ID: __169007218__ Date: __March 24, 2023_
+*  Name: __Narisorn Chowarun__ Student ID: __169007218__ Date: __March 30, 2023_
 *
 *  Cyclic Web App URL: ___https://plain-ruby-rabbit.cyclic.app__
 *
@@ -15,8 +15,9 @@
 
 var express = require("express");
 var app = express();
-//var path = require("path");
 var blog = require("./blog-service.js");
+var HTTP_PORT = process.env.PORT || 8080;
+
 const multer = require("multer");
 
 const upload = multer();
@@ -31,6 +32,8 @@ app.set('view engine', '.hbs');
 
 const stripJs = require('strip-js');
 
+//-------------------------------------------------------------------------------------------
+
 cloudinary.config({
     cloud_name: "dloc6ybj4",
     api_key: "457235514631484",
@@ -38,12 +41,14 @@ cloudinary.config({
     secure: true
 });
 
-var HTTP_PORT = process.env.PORT || 8080;
+//-------------------------------------------------------------------------------------------
 
 // call this function after the http server starts listening for requests
 function onHttpStart() {
     console.log("Express http server listening on: " + HTTP_PORT);
 }
+
+//-------------------------------------------------------------------------------------------
 
 // put this before routes
 app.use(express.static("public"));
@@ -55,8 +60,9 @@ app.use(function(req,res,next){
     next();
 });
 
-//app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 
+//-------------------------------------------------------------------------------------------
 // custom helper function
 app.engine('.hbs', exphbs.engine({ 
     extname: '.hbs',
@@ -88,6 +94,8 @@ app.engine('.hbs', exphbs.engine({
         
     }
 }));
+
+//-------------------------------------------------------------------------------------------
 
 // setup a 'route' to listen on the default url path (http://localhost)
 app.get("/", function (req, res) {
@@ -205,8 +213,13 @@ app.get("/posts", (req, res) => {
     if (req.query.category) {
         blog.getPostByCategory(req.query.category)
             .then((data) => { 
-                res.render("posts", {
-                    posts: data}) 
+                if(data.length > 0 ) {
+                    res.render("posts", {
+                        posts: data}) 
+                }
+                else {
+                    res.render("posts", {message: "no results"});
+                }
             })
             .catch(() => {
                 res.render("posts", {message: "no results"});
@@ -215,8 +228,14 @@ app.get("/posts", (req, res) => {
         // 
         blog.getPostByMinDate(req.query.minDate)
             .then((data) => { 
-                res.render("posts", {
-                    posts: data})  
+                if( data.length > 0) {
+                    res.render("posts", {
+                        posts: data}) 
+                } else {
+                res.render("posts", {message: "no results"});
+
+                }
+                 
             })
             .catch(() => {
                 res.render("posts", {message: "no results"});
@@ -225,8 +244,13 @@ app.get("/posts", (req, res) => {
         // get all posts without filter
         blog.getAllPosts()
             .then((data) => { 
-                res.render("posts", {
-                    posts: data}) 
+                if(data.length > 0 ) {
+                    res.render("posts", {
+                        posts: data}) 
+                } else {
+                    res.render("posts", {message: "no results"});
+                }
+                
                 })
             .catch(() => {
                 res.render("posts", {message: "no results"});
@@ -248,20 +272,23 @@ app.get("/post/:id",(req,res) => {
     })
 })
 
-// setup another route to listen on /categories
-app.get("/categories", (req, res) => {
-    blog.getCategories().then((data) => {
-        res.render("categories", {
-            categories: data
-        })
-    }).catch(() => {
-        res.render("categories", {message: "no results"});
-    })
-})
-
 // setup another route to listen on /posts/add
 app.get("/posts/add", (req, res) => {
-        res.render('addPost')
+    blog.getCategories().then((data) => {
+        res.render('addPost', {categories:data})
+    }).catch(() => {
+        res.render('addPost', {categories:[]})
+    })
+
+})
+
+app.get("/posts/delete/:id", (req,res) => {
+    blog.deletePostById(req.params.id).then((data) => {
+        res.redirect("/posts")
+    }).catch(() => {
+        res.status(500);
+        res.render("posts", {message: "Unable to Remove Post / Post not found)"});
+    })
 })
 
 // for uploading file to posts/add (picture)
@@ -308,6 +335,130 @@ app.post("/posts/add", upload.single("featureImage"), (req, res) => {
         })
     }
 });
+
+// setup another route to listen on /categories
+app.get("/categories", (req, res) => {
+    blog.getCategories().then((categories) => {
+        
+        // recheck here!!!!!!
+        console.log(categories + " &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+
+        if(categories.length > 0) {
+            res.render("categories", {
+                categories: categories
+            })
+        } else {
+            res.render("categories", {message: "no results"});
+        }
+        
+    }).catch(() => {
+        res.render("categories", {message: "no results"});
+    })
+})
+
+app.get("/categories/add", (req,res) => {
+    res.render('addCategory')
+    
+})
+
+app.get("/categories/delete/:id", (req,res) => {
+    blog.deleteCategoryById(req.params.id).then((data) => {
+        res.redirect("/categories")
+    }).catch(() => {
+        res.status(500);
+        res.render("categories", {message: "Unable to Remove Category / Category not found)"});
+    })
+})
+
+
+app.post("/categories/add", upload.single("featureImage"), (req, res) => {
+    //console.log(req.body)
+    //console.log(req)
+    if (req.file) {
+        let streamUpload = (req) => {
+            return new Promise((resolve, reject) => {
+                let stream = cloudinary.uploader.upload_stream(
+                    (error, result) => {
+                        if (result) {
+                            resolve(result);
+                        } else {
+                            reject(error);
+                        }
+                    }
+                );
+
+                streamifier.createReadStream(req.file.buffer).pipe(stream);
+            });
+        };
+
+        async function upload(req) {
+            let result = await streamUpload(req);
+            //console.log(result);
+            return result;
+        }
+
+        upload(req).then((uploaded) => {
+            processPost(uploaded.url);
+        });
+    } else {
+        processPost("");
+    }
+
+    function processPost(imageUrl) {
+
+        req.body.featureImage = imageUrl;
+        blog.addCategory(req.body).then(() => {
+            res.redirect("/categories")
+        }).catch((err) => {
+            res.redirect("/categories/add")
+        })
+    }
+});
+
+/*
+app.post("/categories/add", (req, res) => {
+
+    if (req.file) {
+        let streamUpload = (req) => {
+            return new Promise((resolve, reject) => {
+                let stream = cloudinary.uploader.upload_stream(
+                    (error, result) => {
+                        if (result) {
+                            resolve(result);
+                        } else {
+                            reject(error);
+                        }
+                    }
+                );
+
+                streamifier.createReadStream(req.file.buffer).pipe(stream);
+            });
+        };
+
+        async function upload(req) {
+            let result = await streamUpload(req);
+            console.log(result);
+            return result;
+        }
+
+        upload(req).then((uploaded) => {
+            processPost(uploaded.url);
+        });
+    } else {
+        processPost("");
+    }
+
+    function processPost() {
+
+        // req.body.featureImage = imageUrl;
+        blog.addCategory(req.body).then(() => {
+            res.redirect("/categories")
+        }).catch((err) => {
+            res.redirect("/categories/add")
+        })
+    }
+});
+*/
 
 // setup another route to listen on err
 app.use((req, res) => {
